@@ -1,12 +1,15 @@
 from PIL import Image
 import math
 
-img = Image.open("original-flower.jpg")
+img = Image.open("forest.bmp")
 
 width = img.size[0]
 height = img.size[1]
 
-newimg = Image.new("RGB", (width, height), "white")
+maxG = 0
+
+tempimg = Image.new("RGB", (width, height), "white")
+finalimg = Image.new("RGB", (width, height), "white")
 for x in range(1, width-1):
     for y in range(1, height-1):
 
@@ -91,7 +94,16 @@ for x in range(1, width-1):
 
         length = int(length)
 
-        newimg.putpixel((x,y),(length,length,length))
+        if length > maxG:
+            maxG = length
 
-newimg.save("sobel2.bmp")
-newimg.show()
+        tempimg.putpixel((x, y), (length, length, length))
+
+for x in range(1, width-1):
+    for y in range(1, height-1):
+        normalizedG = tempimg.getpixel((x, y))[0] / maxG * 255
+        normalizedG = int(normalizedG)
+        finalimg.putpixel((x, y), (normalizedG, normalizedG, normalizedG))
+
+finalimg.save("sobel2FORESTtempnormalized.bmp")
+finalimg.show()
