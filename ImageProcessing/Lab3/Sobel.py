@@ -1,7 +1,7 @@
 from PIL import Image
 import math
 
-img = Image.open("forest.bmp")
+img = Image.open("original-flower.jpg")
 
 width = img.size[0]
 height = img.size[1]
@@ -92,7 +92,7 @@ for x in range(1, width-1):
 
         length = math.sqrt((Gx * Gx) + (Gy * Gy))
 
-        length = int(length)
+        length = max(0, min((255, int(length))))
 
         if length > maxG:
             maxG = length
@@ -101,9 +101,14 @@ for x in range(1, width-1):
 
 for x in range(1, width-1):
     for y in range(1, height-1):
-        normalizedG = tempimg.getpixel((x, y))[0] / maxG * 255
+        normalizedG = (tempimg.getpixel((x, y))[0] / maxG) * 255
         normalizedG = int(normalizedG)
+        if normalizedG > 250:
+            normalizedG = 255
+
+        else:
+            normalizedG = 0
         finalimg.putpixel((x, y), (normalizedG, normalizedG, normalizedG))
 
-finalimg.save("sobel2FORESTtempnormalized.bmp")
+finalimg.save("tempFlower2.bmp")
 finalimg.show()
